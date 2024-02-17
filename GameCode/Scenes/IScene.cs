@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace GameCode;
+namespace GameCode.Scenes;
 
 public interface IScene
 {

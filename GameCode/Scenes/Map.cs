@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace GameCode;
+namespace GameCode.Scenes;
 
 public class Map : IScene
 {
@@ -96,8 +96,8 @@ public class Map : IScene
                 sb.Draw(
                     texture: texture,
                     destinationRectangle: _boundsRect,
-                    sourceRectangle: GameSettings.SourceAtlas[Ground[x,y].Type],
-                    color: Ground[x,y].Tint);
+                    sourceRectangle: GameSettings.SourceAtlas[Ground[x, y].Type],
+                    color: Ground[x, y].Tint);
             }
         }
 
@@ -107,7 +107,7 @@ public class Map : IScene
             texture: texture,
             destinationRectangle: _boundsRect,
             sourceRectangle: GameSettings.SourceAtlas[Player.Type],
-            color: Player.Tint, 
+            color: Player.Tint,
             rotation: 0f,
             origin: Vector2.Zero,
             effects: SpriteEffects.None,

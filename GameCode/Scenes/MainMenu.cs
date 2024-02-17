@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace GameCode;
+namespace GameCode.Scenes;
 
 public class MainMenu : IScene
 {
@@ -17,8 +17,8 @@ public class MainMenu : IScene
     {
         _font = content.Load<SpriteFont>(System.IO.Path.Combine("Fonts", "font_22"));
         _playButton = new Button(
-            new Rectangle(GameSettings.WindowWidth/2 - 50, GameSettings.WindowTileHeight, 100, 50),
-            "Play", 
+            new Rectangle(GameSettings.WindowWidth / 2 - 50, GameSettings.WindowTileHeight, 100, 50),
+            "Play",
             () =>
             {
                 GameSettings.CurrentScene = "map";
@@ -31,7 +31,7 @@ public class MainMenu : IScene
         mouseState = Mouse.GetState();
 
         _playButton.Update(
-            mouseState.Position, 
+            mouseState.Position,
             mouseState.LeftButton == ButtonState.Pressed && lastMouseState.LeftButton == ButtonState.Released);
     }
 
@@ -54,7 +54,7 @@ public class Button
 
     private Color currentColor;
     private Color currentTextColor;
-    public Button(Rectangle bounds, string text, Action onClick) 
+    public Button(Rectangle bounds, string text, Action onClick)
     {
         OnClick = onClick;
         Bounds = bounds;
@@ -90,15 +90,15 @@ public class Button
             sourceRectangle: GameSettings.SourceAtlas[SpriteType.Square],
             color: currentColor,
             rotation: 0f,
-            origin: Vector2.Zero, 
+            origin: Vector2.Zero,
             effects: SpriteEffects.None,
             layerDepth: 0f);
 
-        var xpos = Bounds.X + (Bounds.Width / 2);
+        var xpos = Bounds.X + Bounds.Width / 2;
         var strSize = font.MeasureString(Text);
         xpos -= (int)(strSize.X / 2);
 
-        var ypos = Bounds.Y + (Bounds.Height / 2);
+        var ypos = Bounds.Y + Bounds.Height / 2;
         ypos -= (int)(strSize.Y / 2);
 
         sb.DrawString(
@@ -108,7 +108,7 @@ public class Button
             color: currentTextColor,
             rotation: 0f,
             origin: Vector2.Zero,
-            scale: 1f, 
+            scale: 1f,
             effects: SpriteEffects.None,
             0.1f);
     }
