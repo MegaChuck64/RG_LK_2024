@@ -22,6 +22,7 @@ public static class GameSettings
         { SpriteType.Wall,      new Rectangle(0, 0, 16, 16) },
         { SpriteType.Floor,     new Rectangle(16, 0, 16, 16) },
         { SpriteType.Player,    new Rectangle(0, 96, 16, 16) },
+        { SpriteType.Coin,    new Rectangle(0, 48, 16, 16) },
 
     };
 
@@ -34,5 +35,6 @@ public enum SpriteType
     Square,
     Wall,
     Floor,
-    Player
+    Player,
+    Coin
 }

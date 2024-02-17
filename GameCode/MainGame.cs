@@ -59,7 +59,7 @@ namespace GameCode
             
             _spriteBatch.Begin(
                 sortMode: SpriteSortMode.FrontToBack,
-                blendState: BlendState.AlphaBlend,
+                blendState: BlendState.NonPremultiplied,
                 samplerState: SamplerState.PointClamp,
                 depthStencilState: DepthStencilState.DepthRead,
                 rasterizerState: RasterizerState.CullCounterClockwise,
