@@ -35,6 +35,7 @@ public class Map : IScene
             IsSolid = true,
             Collectable = false,
         };
+        Player.ActorClass = new HeroClass(Player);
 
         Ground = new Tile[Width, Height];
         MapItems = new List<MapItem>();
@@ -82,7 +83,7 @@ public class Map : IScene
                     }
                     else
                     {
-                        Actors.Add(new Actor
+                        var skel = new Actor
                         {
                             X = x,
                             Y = y,
@@ -91,7 +92,9 @@ public class Map : IScene
                             Tint = Color.GhostWhite,
                             DrawPath = false,
                             Type = SpriteType.Skeleton,
-                        });
+                        };
+                        skel.ActorClass = new UndeadClass(skel);
+                        Actors.Add(skel);
                     }
                 }
 
@@ -133,12 +136,27 @@ public class Map : IScene
                 }
             }
 
+            var killList = new List<Actor>();
+            var attacked = false;
             foreach (var actor in Actors)
             {
+                if (!attacked && Player.ActorClass.TryAttack(actor))
+                    attacked = true;
+
                 var collisionMap = GetCollisionMap();
                 actor.Target(new Point(Player.X, Player.Y), collisionMap);
                 if (actor.Path.Count > 1)
                     actor.TakeStep();
+
+                actor.ActorClass.TryAttack(Player);
+
+                if (actor.ActorClass.Health <= 0)
+                    killList.Add(actor);
+            }
+
+            foreach (var kl in killList)
+            {
+                Actors.Remove(kl);
             }
         }
     }
@@ -204,13 +222,19 @@ public class Map : IScene
 
     public void DrawUI(SpriteBatch sb, SpriteFont font, float dt)
     {
+        var y = 4;
+        var mapEdge = GameSettings.TileSize * Width;
+
+        var hltTxt = $"HP: {Player.ActorClass.Health}";
+        sb.DrawString(font, hltTxt, new Vector2(mapEdge + 6, y), Color.White);
+
+        y += 32;
+
         var invLabel = "-Inventory-";
         var lblSize = font.MeasureString(invLabel);
-        var mapEdge = GameSettings.TileSize * Width;        
         
         var x = mapEdge + ((GameSettings.WindowWidth - mapEdge)/2);
         x -= (int)(lblSize.X / 2);
-        var y = 4;
         sb.DrawString(font, invLabel, new Vector2(x, y), Color.White);
 
         foreach (var itm in Player.Inventory)

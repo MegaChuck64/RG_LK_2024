@@ -6,6 +6,7 @@ namespace GameCode.MapSystem;
 
 public class Actor : MapItem
 {
+    public ActorClass ActorClass { get; set; }
     public bool DrawPath { get; set; } = false;
     public List<Point> Path { get; private set; } = new List<Point>();
     public Dictionary<SpriteType, int> Inventory { get; private set; } = new Dictionary<SpriteType, int>();
