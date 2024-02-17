@@ -10,6 +10,7 @@ namespace GameCode
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Texture2D _texture;
+        private SpriteFont _font;
 
         private Dictionary<string, IScene> _scenes;
 
@@ -37,10 +38,10 @@ namespace GameCode
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _texture = Content.Load<Texture2D>(System.IO.Path.Combine("Sprites", "sheet"));
-
+            _font = Content.Load<SpriteFont>(System.IO.Path.Combine("Fonts", "font_22"));
             _scenes = new Dictionary<string, IScene>()
             {
-                { "menu", new MainMenu(Content) },
+                { "menu", new MainMenu() },
                 { "map", new Map() }
             };
 
@@ -66,7 +67,7 @@ namespace GameCode
                 effect: null,
                 transformMatrix: null);
 
-            _scenes[GameSettings.CurrentScene].Draw(_spriteBatch, _texture);
+            _scenes[GameSettings.CurrentScene].Draw(_spriteBatch, _texture, _font);
 
             _spriteBatch.End();
 

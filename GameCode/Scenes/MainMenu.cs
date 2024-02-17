@@ -8,14 +8,12 @@ namespace GameCode.Scenes;
 
 public class MainMenu : IScene
 {
-    private readonly SpriteFont _font;
     private readonly Button _playButton;
     private readonly string title = "Hollow World...";
     private MouseState mouseState;
     private MouseState lastMouseState;
-    public MainMenu(ContentManager content)
+    public MainMenu()
     {
-        _font = content.Load<SpriteFont>(System.IO.Path.Combine("Fonts", "font_22"));
         _playButton = new Button(
             new Rectangle(GameSettings.WindowWidth / 2 - 50, GameSettings.WindowTileHeight, 100, 50),
             "Play",
@@ -35,10 +33,10 @@ public class MainMenu : IScene
             mouseState.LeftButton == ButtonState.Pressed && lastMouseState.LeftButton == ButtonState.Released);
     }
 
-    public void Draw(SpriteBatch sb, Texture2D sheet)
+    public void Draw(SpriteBatch sb, Texture2D sheet, SpriteFont font)
     {
-        sb.DrawString(_font, title, new Vector2(200, 200), Color.White);
-        _playButton.Draw(sb, _font, sheet);
+        sb.DrawString(font, title, new Vector2(200, 200), Color.White);
+        _playButton.Draw(sb, font, sheet);
     }
 }
 

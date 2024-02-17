@@ -5,5 +5,5 @@ namespace GameCode.Scenes;
 public interface IScene
 {
     void Update();
-    void Draw(SpriteBatch sb, Texture2D sheet);
+    void Draw(SpriteBatch sb, Texture2D sheet, SpriteFont font);
 }

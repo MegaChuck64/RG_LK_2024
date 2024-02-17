@@ -1,9 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GameCode.MapSystem;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Transactions;
 
 namespace GameCode.Scenes;
 
@@ -108,8 +107,10 @@ public class Map : IScene
             }
             foreach (var cl in collectables)
             {
-                //todo: apply to player inventory
-                MapItems.RemoveAt(cl);
+                if (Player.TryAddInventoryItem(MapItems[cl]))
+                {
+                    MapItems.RemoveAt(cl);
+                }
             }
         }
     }
@@ -131,7 +132,7 @@ public class Map : IScene
         return mp;
     }
 
-    public void Draw(SpriteBatch sb, Texture2D texture)
+    public void Draw(SpriteBatch sb, Texture2D texture, SpriteFont font)
     {
         for (int x = 0; x < Width; x++)
         {
@@ -164,76 +165,31 @@ public class Map : IScene
         }
         
         Player.Draw(sb, texture, ref _boundsRect);
+
+        DrawUI(sb, font);
     }
 
-}
-
-public class Tile
-{
-    public SpriteType Type { get; set; }
-    public Color Tint { get; set; }
-    public bool IsSolid { get; set; }
-}
-
-public class MapItem : Tile
-{
-    public int X { get; set; }
-    public int Y { get; set; }
-
-    public bool Collectable { get; set; }
-}
-
-public class Actor : MapItem
-{
-    public bool DrawPath { get; set; } = false;
-    public List<Point> Path { get; private set; } = new List<Point>();
-    public void Target(Point dest, bool[,] collisionMap)
+    public void DrawUI(SpriteBatch sb, SpriteFont font)
     {
-        var pathFinder = new PathFinder(new(new Point(X, Y), dest, collisionMap));
-        Path = pathFinder.FindPath();
-    }
+        var invLabel = "-Inventory-";
+        var lblSize = font.MeasureString(invLabel);
+        var mapEdge = GameSettings.TileSize * Width;        
+        
+        var x = mapEdge + ((GameSettings.WindowWidth - mapEdge)/2);
+        x -= (int)(lblSize.X / 2);
+        var y = 4;
+        sb.DrawString(font, invLabel, new Vector2(x, y), Color.White);
 
-    public void TakeStep()
-    {
-        if (Path.Count > 0)
+        foreach (var itm in Player.Inventory)
         {
-            X = Path[0].X;
-            Y = Path[0].Y;
-            Path.RemoveAt(0);
+            y += 32;
+            var inf = $"{GameSettings.SpriteDescriptions[itm.Key].name}:    {itm.Value}";            
+            sb.DrawString(font, inf, new Vector2(mapEdge + 6, y), Color.White);
         }
     }
 
-    public void Draw(SpriteBatch sb, Texture2D texture, ref Rectangle _boundsRect)
-    {
-        _boundsRect.X = X * GameSettings.TileSize;
-        _boundsRect.Y = Y * GameSettings.TileSize;
-        sb.Draw(
-            texture: texture,
-             destinationRectangle: _boundsRect,
-             sourceRectangle: GameSettings.SourceAtlas[Type],
-             color: Tint,
-             rotation: 0f,
-             origin: Vector2.Zero,
-             effects: SpriteEffects.None,
-             0.2f);
-
-        if (DrawPath)
-        {
-            var pathColor = new Color(1f, 1f, 0f, 0.2f);
-            foreach (var stp in Path)
-            {
-                _boundsRect.X = stp.X * GameSettings.TileSize;
-                _boundsRect.Y = stp.Y * GameSettings.TileSize;
-                sb.Draw(
-                    texture: texture,
-                    destinationRectangle: _boundsRect,
-                    sourceRectangle: GameSettings.SourceAtlas[SpriteType.Square],
-                    color: pathColor,
-                    rotation: 0f,
-                    origin: Vector2.Zero,
-                    effects: SpriteEffects.None,
-                    0.3f);
-            }
-        }
-    }
 }
+
+
+
+

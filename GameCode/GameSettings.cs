@@ -23,11 +23,27 @@ public static class GameSettings
         { SpriteType.Floor,     new Rectangle(16, 0, 16, 16) },
         { SpriteType.Player,    new Rectangle(0, 96, 16, 16) },
         { SpriteType.Coin,    new Rectangle(0, 48, 16, 16) },
+    };
 
+    public static Dictionary<SpriteType, (string name, string description)> SpriteDescriptions
+    { get; private set; } = new()
+    {
+        { SpriteType.Empty, (string.Empty, string.Empty) },
+        { SpriteType.Square, (string.Empty, string.Empty) },
+        { SpriteType.Wall, ("Wall", "Paneled...") },
+        { SpriteType.Floor, ("Floor", "Wooden...") },
+        { SpriteType.Player, ("Player", "Hi /you...") },
+        { SpriteType.Coin, ("Coin", "As good as gold...") },
+    };
+
+    public static Dictionary<SpriteType, int> InventoryStacks { get; private set; } = new()
+    {
+        { SpriteType.Coin, 5 },
     };
 
 
 }
+
 
 public enum SpriteType
 {
