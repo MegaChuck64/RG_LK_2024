@@ -23,6 +23,7 @@ public static class GameSettings
         { SpriteType.Wall,      new Rectangle(0, 0, 16, 16) },
         { SpriteType.Floor,     new Rectangle(16, 0, 16, 16) },
         { SpriteType.Player,    new Rectangle(0, 96, 16, 16) },
+        { SpriteType.Skeleton,    new Rectangle(0, 112, 16, 16) },
         { SpriteType.Coin,    new Rectangle(0, 48, 16, 16) },
     };
 
@@ -34,6 +35,7 @@ public static class GameSettings
         { SpriteType.Wall, ("Wall", "Paneled...") },
         { SpriteType.Floor, ("Floor", "Wooden...") },
         { SpriteType.Player, ("Player", "Hi /you...") },
+        { SpriteType.Skeleton, ("Skeleton", "Undead...") },
         { SpriteType.Coin, ("Coin", "As good as gold...") },
     };
 
@@ -53,5 +55,6 @@ public enum SpriteType
     Wall,
     Floor,
     Player,
+    Skeleton,
     Coin
 }

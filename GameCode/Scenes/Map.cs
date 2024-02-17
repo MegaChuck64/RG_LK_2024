@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameCode.Scenes;
 
@@ -67,15 +68,31 @@ public class Map : IScene
 
                 if (_rand.NextDouble() > 0.9f && typ != SpriteType.Wall)
                 {
-                    MapItems.Add(new MapItem
+                    if (_rand.NextDouble() > 0.5f)
                     {
-                        X = x,
-                        Y = y,
-                        Collectable = true,
-                        IsSolid = false,
-                        Tint = Color.Yellow,
-                        Type = SpriteType.Coin
-                    });
+                        MapItems.Add(new MapItem
+                        {
+                            X = x,
+                            Y = y,
+                            Collectable = true,
+                            IsSolid = false,
+                            Tint = Color.Yellow,
+                            Type = SpriteType.Coin
+                        });
+                    }
+                    else
+                    {
+                        Actors.Add(new Actor
+                        {
+                            X = x,
+                            Y = y,
+                            Collectable = false,
+                            IsSolid = true,
+                            Tint = Color.GhostWhite,
+                            DrawPath = false,
+                            Type = SpriteType.Skeleton,
+                        });
+                    }
                 }
 
             }
@@ -86,6 +103,7 @@ public class Map : IScene
     {
         //todo: this is probably really slow
         var mouseTilePos = Input.MouseTilePosition;
+
 
         if (mouseTilePos.X >= 0 && mouseTilePos.Y >= 0 && 
             mouseTilePos.X < Width - 1 && mouseTilePos.Y < Height - 1)
@@ -114,6 +132,14 @@ public class Map : IScene
                     MapItems.RemoveAt(cl);
                 }
             }
+
+            foreach (var actor in Actors)
+            {
+                var collisionMap = GetCollisionMap();
+                actor.Target(new Point(Player.X, Player.Y), collisionMap);
+                if (actor.Path.Count > 1)
+                    actor.TakeStep();
+            }
         }
     }
 
@@ -127,7 +153,7 @@ public class Map : IScene
         {
             for (int y = 0; y < Height; y++)
             {
-                mp[x, y] = !Ground[x, y].IsSolid;
+                mp[x, y] = !Ground[x, y].IsSolid && !Actors.Any(t=>t.X == x && t.Y == y);
             }
         }
 
@@ -164,6 +190,11 @@ public class Map : IScene
                 origin: Vector2.Zero,
                 effects: SpriteEffects.None,
                 layerDepth: 0.1f);
+        }
+
+        foreach (var actor in Actors)
+        {
+            actor.Draw(sb, texture, ref _boundsRect);
         }
         
         Player.Draw(sb, texture, ref _boundsRect);
