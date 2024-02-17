@@ -1,7 +1,6 @@
 ﻿using GameCode.MapSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace GameCode.Scenes;
@@ -12,11 +11,18 @@ public class Map : IScene
     public const int Height = 20;
     public Tile[,] Ground { get; private set; }
     public List<MapItem> MapItems { get; private set; }
+    public List<Actor> Actors { get; private set; }
     public Actor Player { get; private set; }
 
+    private readonly System.Random _rand;
     private Rectangle _boundsRect;
-    public Map()
-    {
+    private Color _floorColor = new (160, 82, 65);
+    private Color _wallColor = new (152, 251, 152);
+
+    public Map(int seed = -1)
+    {        
+        _rand = seed == -1 ? new System.Random() : new System.Random(seed);
+
         _boundsRect = new Rectangle(0, 0, GameSettings.TileSize, GameSettings.TileSize);
         Player = new Actor
         {
@@ -31,21 +37,25 @@ public class Map : IScene
 
         Ground = new Tile[Width, Height];
         MapItems = new List<MapItem>();
-        var floorCol = new Color(160, 82, 65);
-        var wallCol = new Color(152, 251, 152);
-        var rand = new System.Random();
+        Actors = new List<Actor>();
+
+        Generate();
+    }
+
+    private void Generate()
+    {
         for (int x = 0; x < Width; x++)
         {
             for (int y = 0; y < Height; y++)
             {
                 var typ = SpriteType.Floor;
-                var col = floorCol;
+                var col = _floorColor;
                 var sld = false;
-                if (x == 0 || x == Width - 1 || y == 0 || y == Height - 1 || 
-                    (rand.NextDouble() > 0.9f && !(x == Player.X && y == Player.Y )))
+                if (x == 0 || x == Width - 1 || y == 0 || y == Height - 1 ||
+                    (_rand.NextDouble() > 0.9f && !(x == Player.X && y == Player.Y)))
                 {
                     typ = SpriteType.Wall;
-                    col = wallCol;
+                    col = _wallColor;
                     sld = true;
                 }
                 Ground[x, y] = new Tile
@@ -55,7 +65,7 @@ public class Map : IScene
                     IsSolid = sld
                 };
 
-                if (rand.NextDouble() > 0.9f && typ != SpriteType.Wall)
+                if (_rand.NextDouble() > 0.9f && typ != SpriteType.Wall)
                 {
                     MapItems.Add(new MapItem
                     {
