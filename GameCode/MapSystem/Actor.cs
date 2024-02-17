@@ -58,7 +58,7 @@ public class Actor : MapItem
              effects: SpriteEffects.None,
              0.2f);
 
-        if (DrawPath)
+        if (DrawPath || GameSettings.DebugOn)
         {
             var pathColor = new Color(1f, 1f, 0f, 0.2f);
             foreach (var stp in Path)

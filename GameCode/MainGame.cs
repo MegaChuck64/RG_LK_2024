@@ -1,6 +1,7 @@
 ﻿using GameCode.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace GameCode
@@ -50,12 +51,19 @@ namespace GameCode
 
         protected override void Update(GameTime gameTime)
         {
-            _scenes[GameSettings.CurrentScene].Update();
+            Input.Update();
+
+            if (Input.WasClicked(Keys.OemTilde))
+                GameSettings.DebugOn = !GameSettings.DebugOn;
+
+            var dt = gameTime.ElapsedGameTime.TotalSeconds;
+            _scenes[GameSettings.CurrentScene].Update((float)dt);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            var dt = gameTime.ElapsedGameTime.TotalSeconds;
             GraphicsDevice.Clear(Color.Black);
             
             _spriteBatch.Begin(
@@ -67,7 +75,7 @@ namespace GameCode
                 effect: null,
                 transformMatrix: null);
 
-            _scenes[GameSettings.CurrentScene].Draw(_spriteBatch, _texture, _font);
+            _scenes[GameSettings.CurrentScene].Draw(_spriteBatch, _texture, _font, (float)dt);
 
             _spriteBatch.End();
 

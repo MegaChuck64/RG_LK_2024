@@ -14,6 +14,7 @@ public static class GameSettings
     public const int WindowTileHeight = WindowHeight / TileSize;
 
     public static string CurrentScene { get; set; }
+    public static bool DebugOn { get; set; }
 
     public static Dictionary<SpriteType, Rectangle> SourceAtlas { get; private set; } = new ()
     {

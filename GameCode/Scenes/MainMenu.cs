@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace GameCode.Scenes;
@@ -10,8 +8,7 @@ public class MainMenu : IScene
 {
     private readonly Button _playButton;
     private readonly string title = "Hollow World...";
-    private MouseState mouseState;
-    private MouseState lastMouseState;
+
     public MainMenu()
     {
         _playButton = new Button(
@@ -23,17 +20,12 @@ public class MainMenu : IScene
             });
     }
 
-    public void Update()
+    public void Update(float dt)
     {
-        lastMouseState = mouseState;
-        mouseState = Mouse.GetState();
-
-        _playButton.Update(
-            mouseState.Position,
-            mouseState.LeftButton == ButtonState.Pressed && lastMouseState.LeftButton == ButtonState.Released);
+        _playButton.Update();
     }
 
-    public void Draw(SpriteBatch sb, Texture2D sheet, SpriteFont font)
+    public void Draw(SpriteBatch sb, Texture2D sheet, SpriteFont font, float dt)
     {
         sb.DrawString(font, title, new Vector2(200, 200), Color.White);
         _playButton.Draw(sb, font, sheet);
@@ -61,13 +53,13 @@ public class Button
         currentTextColor = TextColor;
     }
 
-    public void Update(Point mousePos, bool clicked)
+    public void Update()
     {
-        if (Bounds.Contains(mousePos))
+        if (Bounds.Contains(Input.MousePosition))
         {
             currentColor = HoverColor;
             currentTextColor = TextHoverColor;
-            if (clicked)
+            if (Input.WasClicked(Input.MouseButton.Left))
             {
                 OnClick?.Invoke();
             }

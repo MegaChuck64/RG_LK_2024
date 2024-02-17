@@ -15,8 +15,6 @@ public class Map : IScene
     public Actor Player { get; private set; }
 
     private Rectangle _boundsRect;
-    private MouseState _mouseState;
-    private MouseState _lastMouseState;
     public Map()
     {
         _boundsRect = new Rectangle(0, 0, GameSettings.TileSize, GameSettings.TileSize);
@@ -26,7 +24,7 @@ public class Map : IScene
             Y = 10,
             Tint = new Color(100, 149, 237),
             Type = SpriteType.Player,
-            DrawPath = true,
+            DrawPath = false,
             IsSolid = true,
             Collectable = false,
         };
@@ -73,23 +71,16 @@ public class Map : IScene
         }
     }
 
-    public void Update()
+    public void Update(float dt)
     {
-        _lastMouseState = _mouseState;
-        _mouseState = Mouse.GetState();
-
-
         //todo: this is probably really slow
-        var mouseTilePos = new Point(
-        _mouseState.Position.X / GameSettings.TileSize,
-        _mouseState.Position.Y / GameSettings.TileSize);
+        var mouseTilePos = Input.MouseTilePosition;
 
         if (mouseTilePos.X >= 0 && mouseTilePos.Y >= 0 && 
             mouseTilePos.X < Width - 1 && mouseTilePos.Y < Height - 1)
             Player.Target(mouseTilePos, GetCollisionMap());
 
-        if (_mouseState.LeftButton == ButtonState.Pressed && 
-            _lastMouseState.LeftButton == ButtonState.Released)
+        if (Input.WasClicked(Input.MouseButton.Left))
         {
             Player.TakeStep();
             var collectables = new List<int>();
@@ -132,7 +123,7 @@ public class Map : IScene
         return mp;
     }
 
-    public void Draw(SpriteBatch sb, Texture2D texture, SpriteFont font)
+    public void Draw(SpriteBatch sb, Texture2D texture, SpriteFont font, float dt)
     {
         for (int x = 0; x < Width; x++)
         {
@@ -166,10 +157,10 @@ public class Map : IScene
         
         Player.Draw(sb, texture, ref _boundsRect);
 
-        DrawUI(sb, font);
+        DrawUI(sb, font, dt);
     }
 
-    public void DrawUI(SpriteBatch sb, SpriteFont font)
+    public void DrawUI(SpriteBatch sb, SpriteFont font, float dt)
     {
         var invLabel = "-Inventory-";
         var lblSize = font.MeasureString(invLabel);
@@ -185,6 +176,15 @@ public class Map : IScene
             y += 32;
             var inf = $"{GameSettings.SpriteDescriptions[itm.Key].name}:    {itm.Value}";            
             sb.DrawString(font, inf, new Vector2(mapEdge + 6, y), Color.White);
+        }
+
+        if (GameSettings.DebugOn)
+        {
+            var dbLbl = $"FPS: {(1f/dt):00}";
+            var dbSz = font.MeasureString(dbLbl);
+            var dbX = GameSettings.WindowWidth - dbSz.X - 2;
+            var dbY = GameSettings.WindowHeight - dbSz.Y - 2;
+            sb.DrawString(font, dbLbl, new Vector2(dbX, dbY), Color.Yellow);
         }
     }
 
