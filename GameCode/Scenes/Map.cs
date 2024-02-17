@@ -41,7 +41,8 @@ public class Map : IScene
                 var typ = SpriteType.Floor;
                 var col = floorCol;
                 var sld = false;
-                if (x == 0 || x == Width - 1 || y == 0 || y == Height - 1 || rand.NextDouble() > 0.9f)
+                if (x == 0 || x == Width - 1 || y == 0 || y == Height - 1 || 
+                    (rand.NextDouble() > 0.9f && !(x == Player.X && y == Player.Y )))
                 {
                     typ = SpriteType.Wall;
                     col = wallCol;
