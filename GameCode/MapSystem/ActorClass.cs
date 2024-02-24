@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using GameCode.Scenes;
+using Microsoft.Xna.Framework;
 
 namespace GameCode.MapSystem;
 
@@ -30,6 +31,7 @@ public class HeroClass : ActorClass
     {
         if (Vector2.Distance(new Vector2(effected.X, effected.Y), new Vector2(Actor.X, Actor.Y)) < 1.5f)
         {
+            Logger.Log($"{GameSettings.SpriteDescriptions[Actor.Type].name} attacks {GameSettings.SpriteDescriptions[effected.Type].name}", Color.Blue);
             effected.ActorClass.TakeDamage(Strength);
             return true;
         }
@@ -43,8 +45,11 @@ public class HeroClass : ActorClass
         if (Health < 0)
         {
             Health = 0;
+            Logger.Log("!- Player Dead -!", Color.Red);
             //todo: Game OVER!!
         }
+
+        Logger.Log($"Damage: {damage}");
     }
 }
 
@@ -58,6 +63,7 @@ public class UndeadClass : ActorClass
     {
         if (Vector2.Distance(new Vector2(effected.X, effected.Y), new Vector2(Actor.X, Actor.Y)) < 1.5f)
         {
+            Logger.Log($"{GameSettings.SpriteDescriptions[Actor.Type].name} attacks {GameSettings.SpriteDescriptions[effected.Type].name}", Color.Blue);
             effected.ActorClass.TakeDamage(Strength);
             return true;
         }
@@ -71,7 +77,11 @@ public class UndeadClass : ActorClass
         if (Health < 0)
         {
             Health = 0;
+            Logger.Log("- Critical Hit -", Color.Red);
         }
+
+        Logger.Log($"Damage: {damage}");
+
     }
 }
 

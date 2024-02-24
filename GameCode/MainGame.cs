@@ -39,7 +39,7 @@ namespace GameCode
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _texture = Content.Load<Texture2D>(System.IO.Path.Combine("Sprites", "sheet"));
-            _font = Content.Load<SpriteFont>(System.IO.Path.Combine("Fonts", "font_22"));
+            _font = Content.Load<SpriteFont>(System.IO.Path.Combine("Fonts", "font_18"));
             _scenes = new Dictionary<string, IScene>()
             {
                 { "menu", new MainMenu() },

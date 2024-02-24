@@ -100,6 +100,8 @@ public class Map : IScene
 
             }
         }
+
+        Logger.Log("Map Generated");
     }
 
     public void Update(float dt)
@@ -132,6 +134,7 @@ public class Map : IScene
             {
                 if (Player.TryAddInventoryItem(MapItems[cl]))
                 {
+                    Logger.Log($"Item Added: {GameSettings.SpriteDescriptions[MapItems[cl].Type].name}");
                     MapItems.RemoveAt(cl);
                 }
             }
@@ -141,8 +144,9 @@ public class Map : IScene
             foreach (var actor in Actors)
             {
                 if (!attacked && Player.ActorClass.TryAttack(actor))
+                {
                     attacked = true;
-
+                }
                 var collisionMap = GetCollisionMap();
                 actor.Target(new Point(Player.X, Player.Y), collisionMap);
                 if (actor.Path.Count > 1)
@@ -244,6 +248,22 @@ public class Map : IScene
             sb.DrawString(font, inf, new Vector2(mapEdge + 6, y), Color.White);
         }
 
+        y += 32;
+
+        var logLabel = "-Log-";
+        var logSize = font.MeasureString(invLabel);
+
+        x = mapEdge + ((GameSettings.WindowWidth - mapEdge) / 2);
+        x -= (int)(logSize.X / 2);
+        sb.DrawString(font, logLabel, new Vector2(x, y), Color.White);
+
+        foreach (var log in Logger.History.Reverse<LogEntry>().Take(6))
+        {
+            y += 32;
+            var lgStr = $"{log.Text}";
+            sb.DrawString(font, lgStr, new Vector2(mapEdge + 6, y), log.Color);
+        }
+
         if (GameSettings.DebugOn)
         {
             var dbLbl = $"FPS: {(1f/dt):00}";
@@ -254,8 +274,29 @@ public class Map : IScene
         }
     }
 
+    
+
 }
 
 
 
+public static class Logger
+{
+    public static List<LogEntry> History { get; set; } = new List<LogEntry>();
 
+    public static void Log(string txt, Color? color = null)
+    {
+        History.Add(new LogEntry
+        {
+            Text = txt,
+            Color = color ?? Color.White
+        });
+    }
+
+}
+
+public class LogEntry
+{
+    public string Text { get; set; }
+    public Color Color { get; set; }    
+}
