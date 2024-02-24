@@ -4,19 +4,19 @@ using System;
 
 namespace GameCode.Scenes;
 
-public class MainMenu : IScene
+public class MainMenuScene : IScene
 {
     private readonly Button _playButton;
     private readonly string title = "Hollow World...";
 
-    public MainMenu()
+    public MainMenuScene()
     {
         _playButton = new Button(
             new Rectangle(GameSettings.WindowWidth / 2 - 50, GameSettings.WindowTileHeight, 100, 50),
             "Play",
             () =>
             {
-                GameSettings.CurrentScene = "map";
+                GameSettings.CurrentScene = "travel";
             });
     }
 

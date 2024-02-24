@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace GameCode.Scenes;
 
-public class Map : IScene
+public class MapScene : IScene
 {
     public const int Width = 30;
     public const int Height = 30;
@@ -20,7 +20,7 @@ public class Map : IScene
     private Color _floorColor = new (160, 82, 65);
     private Color _wallColor = new (152, 251, 152);
 
-    public Map(int seed = -1)
+    public MapScene(int seed = -1)
     {        
         _rand = seed == -1 ? new System.Random() : new System.Random(seed);
 
@@ -67,7 +67,7 @@ public class Map : IScene
                     IsSolid = sld
                 };
 
-                if (_rand.NextDouble() > 0.9f && typ != SpriteType.Wall)
+                if (_rand.NextDouble() > 0.98f && typ != SpriteType.Wall)
                 {
                     if (_rand.NextDouble() > 0.5f)
                     {

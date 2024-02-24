@@ -42,8 +42,9 @@ namespace GameCode
             _font = Content.Load<SpriteFont>(System.IO.Path.Combine("Fonts", "font_18"));
             _scenes = new Dictionary<string, IScene>()
             {
-                { "menu", new MainMenu() },
-                { "map", new Map() }
+                { "menu", new MainMenuScene() },
+                { "map", new MapScene() },
+                { "travel", new TravelScene() }
             };
 
             GameSettings.CurrentScene = "menu";

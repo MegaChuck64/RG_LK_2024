@@ -22,6 +22,12 @@ public static class GameSettings
         { SpriteType.Square,     new Rectangle(96, 112, 16, 16) },
         { SpriteType.Wall,      new Rectangle(0, 0, 16, 16) },
         { SpriteType.Floor,     new Rectangle(16, 0, 16, 16) },
+        { SpriteType.Boulder,     new Rectangle(32, 0, 16, 16) },
+        { SpriteType.Rock,     new Rectangle(48, 0, 16, 16) },
+        { SpriteType.Dirt,     new Rectangle(64, 0, 16, 16) },
+        { SpriteType.Camp,     new Rectangle(80, 0, 16, 16) },
+        { SpriteType.Crater,     new Rectangle(96, 0, 16, 16) },
+        { SpriteType.Car,     new Rectangle(0, 64, 16, 16) },
         { SpriteType.Player,    new Rectangle(0, 96, 16, 16) },
         { SpriteType.Skeleton,    new Rectangle(0, 112, 16, 16) },
         { SpriteType.Coin,    new Rectangle(0, 48, 16, 16) },
@@ -34,6 +40,12 @@ public static class GameSettings
         { SpriteType.Square, (string.Empty, string.Empty) },
         { SpriteType.Wall, ("Wall", "Paneled...") },
         { SpriteType.Floor, ("Floor", "Wooden...") },
+        { SpriteType.Boulder, ("Boulder", "Big rock...") },
+        { SpriteType.Dirt, ("Dirt", "Dirty...") },
+        { SpriteType.Rock, ("Rock", "Rocky...") },
+        { SpriteType.Camp, ("Camp", "It's safe here...") },
+        { SpriteType.Crater, ("Camp", "Big whole...") },
+        { SpriteType.Car, ("Car", "Sedan...") },
         { SpriteType.Player, ("Player", "Hi /you...") },
         { SpriteType.Skeleton, ("Skeleton", "Undead...") },
         { SpriteType.Coin, ("Coin", "As good as gold...") },
@@ -42,6 +54,7 @@ public static class GameSettings
     public static Dictionary<SpriteType, int> InventoryStacks { get; private set; } = new()
     {
         { SpriteType.Coin, 5 },
+        { SpriteType.Rock, 12 },
     };
 
 
@@ -54,6 +67,12 @@ public enum SpriteType
     Square,
     Wall,
     Floor,
+    Rock,
+    Boulder,
+    Dirt,
+    Camp,
+    Crater,
+    Car,
     Player,
     Skeleton,
     Coin

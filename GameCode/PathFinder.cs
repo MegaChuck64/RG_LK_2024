@@ -113,7 +113,7 @@ public class PathFinder
     private List<PathFinderNode> GetAdjacentWalkableNodes(PathFinderNode fromNode)
     {
         List<PathFinderNode> walkableNodes = new List<PathFinderNode>();
-        IEnumerable<Point> nextLocations = GetAdjacentLocations(fromNode.Location);
+        IEnumerable<Point> nextLocations = GetAdjacentLocations(fromNode.Location, searchParameters.SearchDiagonals);
 
         foreach (var location in nextLocations)
         {
@@ -157,23 +157,24 @@ public class PathFinder
     }
 
     /// <summary>
-    /// Returns the eight locations immediately adjacent (orthogonally and diagonally) to <paramref name="fromLocation"/>
+    /// Returns the eight locations immediately adjacent (orthogonally and optionally diagonally) to <paramref name="fromLocation"/>
     /// </summary>
     /// <param name="fromLocation">The location from which to return all adjacent points</param>
     /// <returns>The locations as an IEnumerable of Points</returns>
-    private static IEnumerable<Point> GetAdjacentLocations(Point fromLocation)
+    private static IEnumerable<Point> GetAdjacentLocations(Point fromLocation, bool diagonal = true)
     {
-        return new Point[]
+        yield return new(fromLocation.X - 1, fromLocation.Y);
+        yield return new(fromLocation.X, fromLocation.Y + 1);
+        yield return new(fromLocation.X + 1, fromLocation.Y);
+        yield return new(fromLocation.X, fromLocation.Y - 1);        
+
+        if (diagonal)
         {
-                new Point(fromLocation.X-1, fromLocation.Y-1),
-                new Point(fromLocation.X-1, fromLocation.Y  ),
-                new Point(fromLocation.X-1, fromLocation.Y+1),
-                new Point(fromLocation.X,   fromLocation.Y+1),
-                new Point(fromLocation.X+1, fromLocation.Y+1),
-                new Point(fromLocation.X+1, fromLocation.Y  ),
-                new Point(fromLocation.X+1, fromLocation.Y-1),
-                new Point(fromLocation.X,   fromLocation.Y-1)
-        };
+            yield return new Point(fromLocation.X - 1, fromLocation.Y - 1);
+            yield return new Point(fromLocation.X - 1, fromLocation.Y + 1);
+            yield return new Point(fromLocation.X + 1, fromLocation.Y + 1);
+            yield return new Point(fromLocation.X + 1, fromLocation.Y - 1);
+        }
     }
 }
 
@@ -185,11 +186,14 @@ public class PathFinderSearchParams
 
     public bool[,] Map { get; set; }
 
-    public PathFinderSearchParams(Point startLocation, Point endLocation, bool[,] map)
+    public bool SearchDiagonals { get; set; }
+
+    public PathFinderSearchParams(Point startLocation, Point endLocation, bool[,] map, bool searchDiagonals = true)
     {
-        this.StartLocation = startLocation;
-        this.EndLocation = endLocation;
-        this.Map = map;
+        StartLocation = startLocation;
+        EndLocation = endLocation;
+        Map = map;
+        SearchDiagonals = searchDiagonals;
     }
 }
 
