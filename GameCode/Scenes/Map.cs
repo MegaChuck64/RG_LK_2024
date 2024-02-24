@@ -8,8 +8,8 @@ namespace GameCode.Scenes;
 
 public class Map : IScene
 {
-    public const int Width = 20;
-    public const int Height = 20;
+    public const int Width = 30;
+    public const int Height = 30;
     public Tile[,] Ground { get; private set; }
     public List<MapItem> MapItems { get; private set; }
     public List<Actor> Actors { get; private set; }
@@ -134,6 +134,7 @@ public class Map : IScene
             {
                 if (Player.TryAddInventoryItem(MapItems[cl]))
                 {
+                    Logger.Log("-------------------");
                     Logger.Log($"Item Added: {GameSettings.SpriteDescriptions[MapItems[cl].Type].name}");
                     MapItems.RemoveAt(cl);
                 }
@@ -248,7 +249,7 @@ public class Map : IScene
             sb.DrawString(font, inf, new Vector2(mapEdge + 6, y), Color.White);
         }
 
-        y += 32;
+        y = GameSettings.WindowHeight / 2;
 
         var logLabel = "-Log-";
         var logSize = font.MeasureString(invLabel);
@@ -257,7 +258,7 @@ public class Map : IScene
         x -= (int)(logSize.X / 2);
         sb.DrawString(font, logLabel, new Vector2(x, y), Color.White);
 
-        foreach (var log in Logger.History.Reverse<LogEntry>().Take(6))
+        foreach (var log in Logger.History.Reverse<LogEntry>())
         {
             y += 32;
             var lgStr = $"{log.Text}";

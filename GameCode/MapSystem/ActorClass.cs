@@ -31,6 +31,7 @@ public class HeroClass : ActorClass
     {
         if (Vector2.Distance(new Vector2(effected.X, effected.Y), new Vector2(Actor.X, Actor.Y)) < 1.5f)
         {
+            Logger.Log("-------------------");
             Logger.Log($"{GameSettings.SpriteDescriptions[Actor.Type].name} attacks {GameSettings.SpriteDescriptions[effected.Type].name}", Color.Blue);
             effected.ActorClass.TakeDamage(Strength);
             return true;
@@ -63,6 +64,8 @@ public class UndeadClass : ActorClass
     {
         if (Vector2.Distance(new Vector2(effected.X, effected.Y), new Vector2(Actor.X, Actor.Y)) < 1.5f)
         {
+            Logger.Log("-------------------");
+
             Logger.Log($"{GameSettings.SpriteDescriptions[Actor.Type].name} attacks {GameSettings.SpriteDescriptions[effected.Type].name}", Color.Blue);
             effected.ActorClass.TakeDamage(Strength);
             return true;
@@ -81,6 +84,7 @@ public class UndeadClass : ActorClass
         }
 
         Logger.Log($"Damage: {damage}");
+
 
     }
 }

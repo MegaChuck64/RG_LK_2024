@@ -6,8 +6,8 @@ namespace GameCode;
 public static class GameSettings
 {
     public const int TileSize = 32;
-    public const int WindowWidth = 960;
-    public const int WindowHeight = 640;
+    public const int WindowWidth = 1280;
+    public const int WindowHeight = 960;
     public const string WindowTtitle = "RG-LK ~ 2x24";
 
     public const int WindowTileWidth = WindowWidth / TileSize;
