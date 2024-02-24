@@ -44,7 +44,8 @@ namespace GameCode
             {
                 { "menu", new MainMenuScene() },
                 { "map", new MapScene() },
-                { "travel", new TravelScene() }
+                { "travel", new TravelScene() },
+                { "crater", new CraterScene() }
             };
 
             GameSettings.CurrentScene = "menu";
