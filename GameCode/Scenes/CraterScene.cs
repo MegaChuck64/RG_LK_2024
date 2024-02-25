@@ -119,7 +119,15 @@ public class CraterScene : IScene
     {
         if (Input.WasClicked(Input.MouseButton.Left))
         {
-            var inRange = Actors.Where(t => t.ActorClass.Health > 0 && new Rectangle(Player.X - 1, Player.Y - 1, 3, 3).Contains(t.X, t.Y));
+            var inRange = Actors
+                .Where(t => 
+                    t.ActorClass.Health > 0 && 
+                    InRange(
+                        Player.ActorClass.Range, 
+                        new Point(Player.X, Player.Y), 
+                        new Point(t.X, t.Y)));
+
+
             if (!inRange.Any())
             {
                 var target = Input.MouseTilePosition;
@@ -131,9 +139,26 @@ public class CraterScene : IScene
                 Player.ActorClass.TryAttack(inRange.First());
             }
 
+            foreach (var actor in Actors.Where(t => t.ActorClass.Health > 0))
+            {
+                if (InRange(actor.ActorClass.Range, new Point(actor.X, actor.Y), new Point(Player.X, Player.Y)))
+                {
+                    actor.ActorClass.TryAttack(Player);
+                }
+                else if (InRange(actor.ActorClass.Sight, new Point(actor.X, actor.Y), new Point(Player.X, Player.Y)))
+                {
+                    var target = new Point(Player.X, Player.Y);
+                    actor.Target(target, GetCollisionMap());
+                }
+            }
+
             Ticker.TakeTurns();
         }
     }
+
+    private static bool InRange(int range, Point center, Point location) => 
+        new Rectangle(center.X - range, center.Y - range, range * 2 + 1, range * 2 + 1).Contains(location);
+    
 
     public void Draw(SpriteBatch sb, Texture2D sheet, SpriteFont font, float dt)
     {

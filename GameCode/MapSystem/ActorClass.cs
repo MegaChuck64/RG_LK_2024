@@ -8,14 +8,18 @@ public abstract class ActorClass
     public int Strength { get; private set; }
     public int Health { get; protected set; }
     public int Speed { get; protected set; }
+    public int Range { get; protected set; }
+    public int Sight { get; protected set; }
     public Actor Actor { get; private set; }
 
-    public ActorClass(Actor actor, int startingHealth, int strength, int speed)
+    public ActorClass(Actor actor, int startingHealth, int strength, int speed, int range, int sight)
     {
         Actor = actor;
         Health = startingHealth;
         Strength = strength;
         Speed = speed;
+        Range = range;
+        Sight = sight;
     }
 
     public abstract void TakeTurn(Ticker ticker);
@@ -26,7 +30,12 @@ public abstract class ActorClass
 
 public class HeroClass : ActorClass
 {
-    public HeroClass(Actor actor, Ticker ticker) : base(actor, 20, 5, 2)
+    public HeroClass(Actor actor, Ticker ticker) : base(actor, 
+        startingHealth: 20, 
+        strength: 5, 
+        speed: 2, 
+        range: 1,
+        sight: 8)
     {
         ticker.ScheduleTurn(Speed, actor);
     }
@@ -68,14 +77,19 @@ public class HeroClass : ActorClass
 
 public class UndeadClass : ActorClass
 {
-    public UndeadClass(Actor actor, Ticker ticker) : base(actor, 5, 3, 6)
+    public UndeadClass(Actor actor, Ticker ticker) : base(actor, 
+        startingHealth: 5, 
+        strength: 3, 
+        speed: 6,
+        range: 1,
+        sight: 4)
     {
         ticker.ScheduleTurn(Speed, actor);
     }
 
     public override bool TryAttack(Actor effected)
     {
-        if (Vector2.Distance(new Vector2(effected.X, effected.Y), new Vector2(Actor.X, Actor.Y)) < 1.5f)
+        if (Vector2.Distance(new Vector2(effected.X, effected.Y), new Vector2(Actor.X, Actor.Y)) < (Range * 2f + 1f) / 2f)
         {
             Logger.Log("-------------------");
 
