@@ -19,18 +19,25 @@ public class Ticker
 
     public void TakeTurns()
     {
-        Ticks++;
-
-        if (!Schedule.ContainsKey(Ticks))
-            return;
-
-        var turns = Schedule[Ticks].ToList();
-        for (int i = 0; i < turns.Count; i++)
+        do
         {
-            var turn = turns[i];
-            turn.ActorClass.TakeTurn(this);
-        }
-        Schedule.Remove(Ticks);
+            Ticks++;
+
+            if (!Schedule.ContainsKey(Ticks))
+                continue;
+
+            var turns = Schedule[Ticks].ToList();
+            for (int i = 0; i < turns.Count; i++)
+            {
+                var turn = turns[i];
+                turn.ActorClass.TakeTurn(this);
+            }
+
+            Schedule.Remove(Ticks);
+            break;
+
+        } while (true);
+
     }
 }
 
