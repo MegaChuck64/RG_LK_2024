@@ -22,8 +22,17 @@ public class PathFinder
     /// <param name="searchParameters"></param>
     public PathFinder(PathFinderSearchParams searchParameters)
     {
+
+        if (searchParameters.StartLocation.X < 0 || searchParameters.StartLocation.Y < 0 || searchParameters.EndLocation.X < 0 || searchParameters.EndLocation.Y < 0)
+            return;
+
         this.searchParameters = searchParameters;
         InitializeNodes(searchParameters.Map);
+        
+        if (searchParameters.StartLocation.X >= nodes.GetLength(0) || searchParameters.StartLocation.Y >= nodes.GetLength(1) ||
+        searchParameters.EndLocation.X >= nodes.GetLength(0) || searchParameters.EndLocation.Y >= nodes.GetLength(1))
+            return;
+
         this.startNode = this.nodes[searchParameters.StartLocation.X, searchParameters.StartLocation.Y];
         this.startNode.State = PathFinderNodeState.Open;
         this.endNode = this.nodes[searchParameters.EndLocation.X, searchParameters.EndLocation.Y];
@@ -80,6 +89,9 @@ public class PathFinder
     /// <returns>True if a path to the destination has been found, otherwise false</returns>
     private bool Search(PathFinderNode currentNode)
     {
+        if (currentNode == null)
+            return false;
+
         // Set the current node to Closed since it cannot be traversed more than once
         currentNode.State = PathFinderNodeState.Closed;
         List<PathFinderNode> nextNodes = GetAdjacentWalkableNodes(currentNode);
