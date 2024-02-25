@@ -95,6 +95,20 @@ public class CraterScene : IScene
                             Actors.Add(skel);
                         }
                     }
+
+                    if (_rand.NextDouble() > 0.98f)
+                    {
+                        var coin = new MapItem
+                        {
+                            Collectable = true,
+                            IsSolid = false,
+                            Tint = Color.Yellow,
+                            Type = SpriteType.Coin,
+                            X = x,
+                            Y = y
+                        };
+                        MapItems.Add(coin);
+                    }
                 }
             }
         }
@@ -153,6 +167,29 @@ public class CraterScene : IScene
             }
 
             Ticker.TakeTurns();
+
+            var collects = MapItems
+                .Select((t, i) => (t, i))
+                .Where(s => s.t.Collectable && s.t.X == Player.X && s.t.Y == Player.Y)
+                .ToList();
+
+            foreach (var (c, i) in collects)
+            {
+                if (Player.TryAddInventoryItem(c))
+                {
+                    MapItems.RemoveAt(i);
+                }
+            }
+
+            var deadActors = Actors
+                .Select((t, i) => (t, i))
+                .Where(s => s.t.ActorClass.Health <= 0)
+                .ToList();
+
+            foreach (var (a,i) in deadActors)
+            {
+                Actors.RemoveAt(i);
+            }
         }
     }
 
@@ -203,7 +240,57 @@ public class CraterScene : IScene
 
         Player.Draw(sb, sheet, ref _boundsRect);
 
+        DrawUI(sb, font, dt);
+    }
 
+    public void DrawUI(SpriteBatch sb, SpriteFont font, float dt)
+    {
+        var y = 4;
+        var mapEdge = GameSettings.TileSize * Width;
+
+        var hltTxt = $"HP: {Player.ActorClass.Health}";
+        sb.DrawString(font, hltTxt, new Vector2(mapEdge + 6, y), Color.White);
+
+        y += 32;
+
+        var invLabel = "-Inventory-";
+        var lblSize = font.MeasureString(invLabel);
+
+        var x = mapEdge + ((GameSettings.WindowWidth - mapEdge) / 2);
+        x -= (int)(lblSize.X / 2);
+        sb.DrawString(font, invLabel, new Vector2(x, y), Color.White);
+
+        foreach (var itm in Player.Inventory)
+        {
+            y += 32;
+            var inf = $"{GameSettings.SpriteDescriptions[itm.Key].name}:    {itm.Value}";
+            sb.DrawString(font, inf, new Vector2(mapEdge + 6, y), Color.White);
+        }
+
+        y = GameSettings.WindowHeight / 2;
+
+        var logLabel = "-Log-";
+        var logSize = font.MeasureString(invLabel);
+
+        x = mapEdge + ((GameSettings.WindowWidth - mapEdge) / 2);
+        x -= (int)(logSize.X / 2);
+        sb.DrawString(font, logLabel, new Vector2(x, y), Color.White);
+
+        foreach (var log in Logger.History.Reverse<LogEntry>())
+        {
+            y += 32;
+            var lgStr = $"{log.Text}";
+            sb.DrawString(font, lgStr, new Vector2(mapEdge + 6, y), log.Color);
+        }
+
+        if (GameSettings.DebugOn)
+        {
+            var dbLbl = $"FPS: {(1f / dt):00}";
+            var dbSz = font.MeasureString(dbLbl);
+            var dbX = GameSettings.WindowWidth - dbSz.X - 2;
+            var dbY = GameSettings.WindowHeight - dbSz.Y - 2;
+            sb.DrawString(font, dbLbl, new Vector2(dbX, dbY), Color.Yellow);
+        }
     }
 
 }
