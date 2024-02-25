@@ -7,15 +7,18 @@ public abstract class ActorClass
 {
     public int Strength { get; private set; }
     public int Health { get; protected set; }
+    public int Speed { get; protected set; }
     public Actor Actor { get; private set; }
 
-    public ActorClass(Actor actor, int startingHealth, int strength)
+    public ActorClass(Actor actor, int startingHealth, int strength, int speed)
     {
         Actor = actor;
         Health = startingHealth;
         Strength = strength;
+        Speed = speed;
     }
 
+    public abstract void TakeTurn(Ticker ticker);
     public abstract bool TryAttack(Actor effected);
 
     public abstract void TakeDamage(int damage);
@@ -23,8 +26,9 @@ public abstract class ActorClass
 
 public class HeroClass : ActorClass
 {
-    public HeroClass(Actor actor) : base(actor, 20, 5)
+    public HeroClass(Actor actor, Ticker ticker) : base(actor, 20, 5, 2)
     {
+        ticker.ScheduleTurn(Speed, actor);
     }
 
     public override bool TryAttack(Actor effected)
@@ -52,12 +56,21 @@ public class HeroClass : ActorClass
 
         Logger.Log($"Damage: {damage}");
     }
+
+    public override void TakeTurn(Ticker ticker)
+    {
+        //take turn
+        Actor.TakeStep();
+
+        ticker.ScheduleTurn(Speed, Actor);
+    }
 }
 
 public class UndeadClass : ActorClass
 {
-    public UndeadClass(Actor actor) : base(actor, 5, 3)
+    public UndeadClass(Actor actor, Ticker ticker) : base(actor, 5, 3, 6)
     {
+        ticker.ScheduleTurn(Speed, actor);
     }
 
     public override bool TryAttack(Actor effected)
@@ -84,8 +97,13 @@ public class UndeadClass : ActorClass
         }
 
         Logger.Log($"Damage: {damage}");
+    }
 
-
+    public override void TakeTurn(Ticker ticker)
+    {
+        //take turn
+        Actor.TakeStep();
+        ticker.ScheduleTurn(Speed, Actor);
     }
 }
 

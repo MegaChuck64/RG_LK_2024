@@ -14,7 +14,7 @@ public class MapScene : IScene
     public List<MapItem> MapItems { get; private set; }
     public List<Actor> Actors { get; private set; }
     public Actor Player { get; private set; }
-
+    public Ticker Ticker { get; private set; }
     private readonly System.Random _rand;
     private Rectangle _boundsRect;
     private Color _floorColor = new (160, 82, 65);
@@ -25,6 +25,7 @@ public class MapScene : IScene
         _rand = seed == -1 ? new System.Random() : new System.Random(seed);
 
         _boundsRect = new Rectangle(0, 0, GameSettings.TileSize, GameSettings.TileSize);
+        Ticker = new Ticker();
         Player = new Actor
         {
             X = 10,
@@ -35,7 +36,7 @@ public class MapScene : IScene
             IsSolid = true,
             Collectable = false,
         };
-        Player.ActorClass = new HeroClass(Player);
+        Player.ActorClass = new HeroClass(Player, Ticker);
 
         Ground = new Tile[Width, Height];
         MapItems = new List<MapItem>();
@@ -93,7 +94,7 @@ public class MapScene : IScene
                             DrawPath = false,
                             Type = SpriteType.Skeleton,
                         };
-                        skel.ActorClass = new UndeadClass(skel);
+                        skel.ActorClass = new UndeadClass(skel, Ticker);
                         Actors.Add(skel);
                     }
                 }
