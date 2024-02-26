@@ -13,12 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Fonts/font_18.spritefont
+#begin Fonts/font_24.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:Fonts/font_18.spritefont
+/build:Fonts/font_24.spritefont
 
 #begin Sprites/sheet.png
 /importer:TextureImporter
